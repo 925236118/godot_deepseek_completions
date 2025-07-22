@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://w56l80vhc7m4"]
+
+[ext_resource type="Script" uid="uid://d2n2lh0ak7ysx" path="res://addons/deepseek_completions/deepseek_chat_stream.gd" id="1_ua58e"]
+
+[node name="DeepseekChat" type="Node"]
+script = ExtResource("1_ua58e")
+ds_token = "sk-e6b6a694eacc40b997003dc0848fd4fe"
+prompt = "你是一个godot游戏开发专家，你需要补全的发送给你的代码，补全的内容应该逻辑完善，语义清晰，注释完整且友好。"

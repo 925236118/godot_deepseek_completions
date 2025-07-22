@@ -1,0 +1,123 @@
+[gd_scene load_steps=3 format=3 uid="uid://b72avkqnghtnk"]
+
+[ext_resource type="Script" uid="uid://8yrvb50ggi1j" path="res://addons/deepseek_completions/result_code.gd" id="1_t36vk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t36vk"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.278431, 0.54902, 0.74902, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[node name="ResultCode" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_t36vk")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_t36vk")
+
+[node name="CodeContainer" type="MarginContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CodeContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CodeContainer/PanelContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CodeContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CodeContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="InsertButton" type="Button" parent="CodeContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "插入代码"
+
+[node name="ReGenerateButton" type="Button" parent="CodeContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "重写"
+
+[node name="DiscardButton" type="Button" parent="CodeContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "丢弃"
+
+[node name="CodeEdit" type="CodeEdit" parent="CodeContainer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+highlight_current_line = true
+symbol_tooltip_on_hover = true
+line_folding = true
+gutters_draw_line_numbers = true
+gutters_draw_fold_gutter = true
+
+[node name="LoadingContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+offset_right = 93.0
+offset_bottom = 63.0
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="LoadingContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LoadingContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LoadingContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "生成中"
+
+[node name="LoadingPoint" type="Label" parent="LoadingContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="LoadingTimer" type="Timer" parent="LoadingContainer"]
+wait_time = 0.3
+autostart = true
+
+[connection signal="pressed" from="CodeContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer/InsertButton" to="." method="_on_insert_button_pressed"]
+[connection signal="pressed" from="CodeContainer/PanelContainer/VBoxContainer/HBoxContainer/HBoxContainer/ReGenerateButton" to="." method="_on_re_generate_button_pressed"]
+[connection signal="pressed" from="CodeContainer/PanelContainer/VBoxContainer/HBoxContainer/DiscardButton" to="." method="_on_discard_button_pressed"]
+[connection signal="timeout" from="LoadingContainer/LoadingTimer" to="." method="_on_loading_timer_timeout"]
