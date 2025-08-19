@@ -63,21 +63,14 @@ func post_message(msg: String):
 		push_error("请求发送失败: " + error_string(err))
 		return
 	while http_client.get_status() == HTTPClient.STATUS_REQUESTING:
-		# Keep polling for as long as the request is being processed.
 		http_client.poll()
-		#print("Requesting...")
 		await get_tree().process_frame
-	#print("response? ", http_client.has_response()) # Site might not have a response.
 
 	if http_client.has_response():
-		headers = http_client.get_response_headers_as_dictionary() # Get response headers.
-		#print("code: ", http_client.get_response_code()) # Show response code.
-		#print("**headers:\\n", headers) # Show headers.
+		headers = http_client.get_response_headers_as_dictionary()
 
 		while http_client.get_status() == HTTPClient.STATUS_BODY:
-			# While there is body left to be read
 			http_client.poll()
-			# Get a chunk.
 			var chunk = http_client.read_response_body_chunk()
 			if chunk.size() == 0:
 				await get_tree().process_frame

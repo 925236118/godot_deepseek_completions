@@ -2,8 +2,8 @@
 class_name DeepSeekChat
 extends Node
 
-@export var ds_token: String = ''
-@export_multiline var prompt: String = ""
+var ds_token: String = ''
+var prompt: String = ""
 
 signal generate_finish(msg: String)
 

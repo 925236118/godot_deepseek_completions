@@ -12,10 +12,39 @@ var result_window: Window = null
 var result_code_container: ResultCode = null
 
 func _enter_tree() -> void:
+	init_completions_settings()
+
 	script_editor = EditorInterface.get_script_editor()
 	script_editor.editor_script_changed.connect(_on_editor_script_changed)
 	if script_editor.get_current_editor():
 		code_editor = script_editor.get_current_editor().get_base_editor()
+
+func init_completions_settings():
+	var settings = EditorInterface.get_editor_settings()
+	settings.set("DeepSeek Completions/common/api_key", "")
+
+	var api_key_info = {
+		"name": "DeepSeek Completions/common/api_key",
+		"type": TYPE_STRING,
+		"hint": PROPERTY_HINT_PASSWORD,
+		"hint_string": "请输入密钥"
+	}
+	settings.add_property_info(api_key_info)
+	settings.set("DeepSeek Completions/common/prompt", "你是一个godot游戏开发专家，你需要补全的发送给你的代码，补全的内容应该逻辑完善，语义清晰，注释完整且友好。")
+
+	var prompt_info = {
+		"name": "DeepSeek Completions/common/prompt",
+		"type": TYPE_STRING,
+		"hint": PROPERTY_HINT_NONE,
+		"hint_string": "请输入密钥"
+	}
+	settings.add_property_info(prompt_info)
+
+
+func erase_completions_settings():
+	var settings = EditorInterface.get_editor_settings()
+	settings.erase("DeepSeek Completions/common/api_key")
+	settings.erase("DeepSeek Completions/common/prompt")
 
 func _on_editor_script_changed(script: Script):
 	var code_index = script_editor.get_open_scripts().find(script)
@@ -39,6 +68,7 @@ func _exit_tree() -> void:
 	if result_window:
 		result_window.queue_free()
 	result_code_container = null
+	erase_completions_settings()
 
 func ai_completion():
 	var caret_count = code_editor.get_caret_count()
@@ -63,6 +93,9 @@ func ai_completion():
 	if not deepseek_node:
 		deepseek_node = DEEPSEEK_CHAT.instantiate() as DeepSeekChatStream
 		code_editor.add_child(deepseek_node)
+		var settings = EditorInterface.get_editor_settings()
+		deepseek_node.ds_token = settings.get("DeepSeek Completions/common/api_key")
+		deepseek_node.prompt = settings.get("DeepSeek Completions/common/prompt")
 
 		#deepseek_node.generate_finish.connect(_on_deepseek_node_generate_finish)
 		deepseek_node.message.connect(_on_message)
