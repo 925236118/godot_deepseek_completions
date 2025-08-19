@@ -27,16 +27,16 @@ func init_completions_settings():
 		"name": "DeepSeek Completions/common/api_key",
 		"type": TYPE_STRING,
 		"hint": PROPERTY_HINT_PASSWORD,
-		"hint_string": "请输入密钥"
+		"hint_string": "请输入密钥，sk-xxx"
 	}
 	settings.add_property_info(api_key_info)
-	settings.set("DeepSeek Completions/common/prompt", "你是一个godot游戏开发专家，你需要补全的发送给你的代码，补全的内容应该逻辑完善，语义清晰，注释完整且友好。")
+	settings.set("DeepSeek Completions/common/prompt", "你是一个godot游戏开发专家，你需要补全的发送给你的代码，补全的内容应该逻辑完善，语义清晰，注释完整且友好。不要使用pass关键字跳过逻辑。")
 
 	var prompt_info = {
 		"name": "DeepSeek Completions/common/prompt",
 		"type": TYPE_STRING,
 		"hint": PROPERTY_HINT_NONE,
-		"hint_string": "请输入密钥"
+		"hint_string": "请输入提示词"
 	}
 	settings.add_property_info(prompt_info)
 
@@ -72,13 +72,10 @@ func _exit_tree() -> void:
 
 func ai_completion():
 	var caret_count = code_editor.get_caret_count()
-	#print("caret_count ", caret_count)
 	if caret_count > 1:
 		return
 	var caret_line = code_editor.get_caret_line()
 	var caret_column = code_editor.get_caret_column()
-	#print("caret_line ", caret_line)
-	#print("caret_column ", caret_column)
 	var code_string = ""
 	for line in caret_line + 1:
 		var text = code_editor.get_line(line)
@@ -97,7 +94,6 @@ func ai_completion():
 		deepseek_node.ds_token = settings.get("DeepSeek Completions/common/api_key")
 		deepseek_node.prompt = settings.get("DeepSeek Completions/common/prompt")
 
-		#deepseek_node.generate_finish.connect(_on_deepseek_node_generate_finish)
 		deepseek_node.message.connect(_on_message)
 		deepseek_node.generate_finish.connect(_on_deepseek_node_generate_finish)
 	deepseek_node.post_message(code_string)

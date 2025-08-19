@@ -55,4 +55,4 @@ func _on_loading_timer_timeout() -> void:
 	loading_point.text = ".".repeat((loading_point_count + 1) % 4)
 
 func clear():
-	code_edit.text += ""
+	code_edit.text = ""
